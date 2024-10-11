@@ -31,7 +31,7 @@ from django.db import models
 # 어드민 모델 등록 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField(auto_now_add=True)
     # score = models.FloatField(default=0) 
     # json_field = models.JSONField(default=dict)
     def __str__(self):
@@ -44,4 +44,4 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
-# 예전으로 돌아가기 위해 # python manage.py migrate polls 0001 
+# 예전으로 돌아가기 위해 # python manage.py migrate polls 0001
