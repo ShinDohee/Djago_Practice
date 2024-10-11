@@ -44,5 +44,4 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
-# 예전으로 돌아가기 위해 
-# python manage.py migrate polls 0001 
+# 예전으로 돌아가기 위해 # python manage.py migrate polls 0001 
