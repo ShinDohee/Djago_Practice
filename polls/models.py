@@ -1,5 +1,8 @@
 from django.db import models
 
+from django.utils import timezone
+import datetime
+
 # Create your models here.
 # dB를 테이블별로 읽어서, 도와주는 파일 
 
@@ -34,14 +37,21 @@ class Question(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     # score = models.FloatField(default=0) 
     # json_field = models.JSONField(default=dict)
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    
     def __str__(self):
-        return f'제목: {self.question_text}, 날짜: {self.pub_date}'
+        if self.was_published_recently():
+            new_badge = 'NEW!!!'
+        else:
+            new_badge = ''
+        return f'{new_badge} 제목: {self.question_text}, 날짜: {self.pub_date}'
         
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     def __str__(self):
-        return self.choice_text
+        return f'[{self.question.question_text}]{self.choice_text}'
 
 # 예전으로 돌아가기 위해 # python manage.py migrate polls 0001
