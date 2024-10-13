@@ -1,8 +1,10 @@
-from polls.models import Question
-from polls_api.serilaizers import QuestionSerializer, UserSerializer, RegisterSerializer
+from polls.models import Question, Choice, Vote
+from polls_api.serilaizers import QuestionSerializer, UserSerializer, RegisterSerializer, VoteSerializer
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsVoter
+from rest_framework import status
+from rest_framework.response import Response
 
 # from rest_framework.decorators import api_view
 # from rest_framework.response import Response
@@ -139,3 +141,28 @@ class UserDetail(generics.RetrieveAPIView):
 class RegisterUser(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+
+class VoteList(generics.ListCreateAPIView):
+    serializer_class = VoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self, *args, **kwargs):
+        return Vote.objects.filter(voter=self.request.user)
+    #Mixin 함수를 오버라이드 함 
+    def create(self, request, *args, **kwargs):
+        new_data = request.data.copy()
+        new_data['voter'] = request.user.id
+        serializer = self.get_serializer(data=new_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class VoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+    permission_classes = [permissions.IsAuthenticated, IsVoter]
+    
+    def perform_update(self, serializer):
+        serializer.save(voter=self.request.user)

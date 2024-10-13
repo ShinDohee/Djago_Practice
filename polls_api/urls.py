@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import *
+from .views import VoteList, VoteDetail, QuestionList, QuestionDetail, UserList, UserDetail, RegisterUser
 # from . import views
 
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
     path('users/<int:pk>/', UserDetail.as_view()),
     path('register/', RegisterUser.as_view()),
     path('api-auth/', include('rest_framework.urls')),
+    path('vote/', VoteList.as_view()),
+    path('vote/<int:pk>/', VoteDetail.as_view()),
 ]

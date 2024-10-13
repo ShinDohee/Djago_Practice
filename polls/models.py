@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 import datetime
 from django.contrib import admin
-
+from django.contrib.auth.models import User
 # Create your models here.
 # dB를 테이블별로 읽어서, 도와주는 파일 
 
@@ -30,6 +30,7 @@ from django.contrib import admin
 #     choice_text = models.CharField(max_length=200)
 #     votes = models.IntegerField(default=0)
 
+# 모델에서 수정을 하면 무조건 shell 에서 migration 을 해줘야함 
 
 
 # 어드민 모델 등록 
@@ -52,10 +53,19 @@ class Question(models.Model):
         return f'제목: {self.question_text}, 날짜: {self.pub_date}'
         
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='choices', on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     def __str__(self):
-        return f'[{self.question.question_text}]{self.choice_text}'
+        return self.choice_text
 
+class Vote(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    voter = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['question', 'voter'], name='unique_voter_for_questions')
+        ]
 # 예전으로 돌아가기 위해 # python manage.py migrate polls 0001
