@@ -2,6 +2,7 @@ from django.db import models
 
 from django.utils import timezone
 import datetime
+from django.contrib import admin
 
 # Create your models here.
 # dB를 테이블별로 읽어서, 도와주는 파일 
@@ -33,10 +34,11 @@ import datetime
 
 # 어드민 모델 등록 
 class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField(auto_now_add=True)
+    question_text = models.CharField(max_length=200, verbose_name='질문')
+    pub_date = models.DateTimeField(auto_now_add=True, verbose_name='생성일')
     # score = models.FloatField(default=0) 
     # json_field = models.JSONField(default=dict)
+    @admin.display(boolean=True, description='최근생성(하루기준)')
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
