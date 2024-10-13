@@ -43,11 +43,11 @@ class Question(models.Model):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
     def __str__(self):
-        if self.was_published_recently():
-            new_badge = 'NEW!!!'
-        else:
-            new_badge = ''
-        return f'{new_badge} 제목: {self.question_text}, 날짜: {self.pub_date}'
+        # if self.was_published_recently():
+        #     new_badge = 'NEW!!!'
+        # else:
+        #     new_badge = ''
+        return f'제목: {self.question_text}, 날짜: {self.pub_date}'
         
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

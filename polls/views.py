@@ -12,6 +12,7 @@ from django.db.models import F
 def some_url(request):
     return HttpResponse("some url 구현함")
 
+#목록 기능 
 # order_by(컬럼명)  역순으로 정렬 
 # render(request, 'polls/index.html', context) html 에 데이터 그리는 것 
 def index(request):

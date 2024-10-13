@@ -6,7 +6,6 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ['id','question_text', 'pub_date']
-
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)
 #     question_text = serializers.CharField(max_length=200)
