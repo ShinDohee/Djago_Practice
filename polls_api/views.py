@@ -1,11 +1,14 @@
-from rest_framework.decorators import api_view
 from polls.models import Question
-from polls_api.serilaizers import QuestionSerializer
-from rest_framework.response import Response
-from rest_framework import status , mixins, generics
-from django.shortcuts import render , get_object_or_404
-# Create your views here.
-from rest_framework.views import APIView
+from polls_api.serilaizers import QuestionSerializer, UserSerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status , mixins
+# from django.shortcuts import render , get_object_or_404
+# # Create your views here.
+# from rest_framework.views import APIView
 
 # 메소드를 선언해서, http 메소드에 따라 분기하여 구현함 
 # @api_view(['GET', 'POST'])
@@ -116,3 +119,11 @@ class QuestionList(generics.ListCreateAPIView):
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer    

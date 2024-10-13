@@ -5,6 +5,9 @@ from django.shortcuts import render # 화면에 html 을 그려주는 역할
 from django.shortcuts import render , get_object_or_404
 from django.urls import reverse
 from django.db.models import F
+from django.views import generic
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
 
 # def index(request):
 #     return HttpResponse("heelo, wolrld!")
@@ -56,3 +59,8 @@ def vote(request, question_id):
 def result(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/result.html', {'question': question})
+
+class SignupView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('user-list')
+    template_name = 'registration/signup.html'

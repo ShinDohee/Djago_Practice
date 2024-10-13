@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from polls.models import Question
+from django.contrib.auth.models import User
 
 #ModelSerializer로 만들면, create, update 정의안해줘도 자동으로 만들어짐!
 class QuestionSerializer(serializers.ModelSerializer):
@@ -20,3 +21,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 #         instance.question_text = validated_data.get('question_text', instance.question_text) + '[시리얼 라이즈에서 업데이트]'
 #         instance.save()
 #         return instance
+
+class UserSerializer(serializers.ModelSerializer):
+    #user 와 quesetion의 1:다 의 관계를 표현 
+    questions = serializers.PrimaryKeyRelatedField(many=True, queryset=Question.objects.all())
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'questions']

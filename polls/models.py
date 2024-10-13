@@ -36,6 +36,8 @@ from django.contrib import admin
 class Question(models.Model):
     question_text = models.CharField(max_length=200, verbose_name='질문')
     pub_date = models.DateTimeField(auto_now_add=True, verbose_name='생성일')
+# on_delete=models.CASCADE옵션은 owner가 삭제되면 Question 도 지우라는 뜻
+    owner = models.ForeignKey('auth.User', related_name='questions', on_delete=models.CASCADE, null=True)
     # score = models.FloatField(default=0) 
     # json_field = models.JSONField(default=dict)
     @admin.display(boolean=True, description='최근생성(하루기준)')
