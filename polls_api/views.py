@@ -1,7 +1,8 @@
 from polls.models import Question
 from polls_api.serilaizers import QuestionSerializer, UserSerializer, RegisterSerializer
-from rest_framework import generics
+from rest_framework import generics, permissions
 from django.contrib.auth.models import User
+from .permissions import IsOwnerOrReadOnly
 
 # from rest_framework.decorators import api_view
 # from rest_framework.response import Response
@@ -115,10 +116,17 @@ from django.contrib.auth.models import User
 class QuestionList(generics.ListCreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self, serializer):
+        #원래 owner는 readonly 라서 값을 설정 못하지만
+        #save 할때는 주어지는 변수들을 사용하기 때문에 owner를 지정하여 저장할 수 있다 
+        serializer.save(owner=self.request.user)
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()

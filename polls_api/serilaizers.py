@@ -5,9 +5,11 @@ from django.contrib.auth.password_validation import validate_password
 
 #ModelSerializer로 만들면, create, update 정의안해줘도 자동으로 만들어짐!
 class QuestionSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = Question
-        fields = ['id','question_text', 'pub_date']
+        fields = ['id', 'question_text', 'pub_date', 'owner']
 # class QuestionSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)
 #     question_text = serializers.CharField(max_length=200)
